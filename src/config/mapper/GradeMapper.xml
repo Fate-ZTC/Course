@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pzhu.ssm.mapper.GradeMapper">
+    <!--设置结果集对应关系 id结果映射id type为要映射的类-->
+    <resultMap id="GradeCourse" type="GradeCourse">
+        <id property="toid" column="toid"/>
+        <result property="toid" column="to_id"/>
+        <result property="toname" column="to_name"/>
+        <result property="tograde" column="to_grade"/>
+    </resultMap>
+    <insert id="insertSelect" parameterType="grade">
+        insert into grade (to_id,sid) values (#{0},#{1})
+    </insert>
+
+
+
+    <select id="selectGrade" resultMap="GradeCourse">
+        SELECT course.`cid`,course.`cname`,topic.`to_id`,topic.`to_name`,grade.`to_grade`,grade.`grade` FROM (course RIGHT JOIN topic ON course.`cid`=topic.`cid`) RIGHT JOIN grade ON grade.`to_id`=topic.`to_id`
+    </select>
+
+
+    <update id="signIn" parameterType="int">
+        UPDATE grade SET g_count=g_count+1 WHERE sid=#{s_id}
+    </update>
+
+
+    <update id="getResult" parameterType="int">
+        UPDATE	grade SET grade=to_grade*0.7+g_count*3 WHERE sid=#{s_id}
+    </update>
+
+
+    <select id="countSignIn" parameterType="int" resultType="int">
+        SELECT g_count FROM grade WHERE sid=#{s_id}
+    </select>
+
+</mapper>
